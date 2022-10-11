@@ -1,0 +1,88 @@
+<html>
+  	<head>
+	  	<link rel="stylesheet" href="estimator.css"> 
+		<title>Attack Stat Calculator - Pokemon</title>
+  </head>
+  <body>
+	<div class="container">
+		<h1>Attack Stat Calculator - Pokemon</h1>
+		<p>Enter the following information:</p>
+		<label for="gen">Generation:</label>
+		<select id="gen" name="gen" oninput="calcAttack()">
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+		</select>
+		</label>
+		<div class="grid">
+			<div class="box">
+				<input type="number" id="damage" oninput="calcAttack()"><br/><label for="damage">Damage dealt</label>
+			</div>
+			<div class="box">
+				<input type="number" id="power" oninput="calcAttack()"><br/><label for="power">Move power</label>
+			</div>
+			<div class="box">
+				<input type="number" id="level" oninput="calcAttack()"><br/><label for="level">Attacker level</label>
+			</div>
+			<div class="box">
+				<input type="number" id="defense" oninput="calcAttack()"><br/><label for="defense">Defense stat</label>
+			</div>
+			<div class="box">
+				<input type="checkbox" id="stab" oninput="calcAttack()"><br/><label for="stab">STAB?</label>
+			</div>
+			<div class="box">
+				<input type="radio" id="1/4" name="eff" oninput="calcAttack()"><label for="1/4">1/4</label>
+				<input type="radio" id="1/2" name="eff" oninput="calcAttack()"><label for="1/2">1/2</label>
+				<input type="radio" id="1" name="eff" checked oninput="calcAttack()"><label for="1">1</label>
+				<input type="radio" id="2" name="eff" oninput="calcAttack()"><label for="2">2</label>
+				<input type="radio" id="4" name="eff" oninput="calcAttack()"><label for="4">4</label>
+				<br/><label for="eff">Effectiveness?</label>
+			</div>
+			<div class="box">
+				<input type="checkbox" id="crit" oninput="calcAttack()"><br/><label for="crit">Critical hit?</label>
+			</div>
+			<div class="box">
+				<div class="tooltip"><input type="number" id="other" oninput="calcAttack()" value="1"><br/><label for="other">Other factors?</label><span class="tooltiptext">This may include burns, weather, and other ability changes to damage.</span></div>
+			</div>
+			<div class="box final">
+				<h2>Attack stat: <span id="attackmin"></span>-<span id="attackmax"></span></h2>
+			</div>
+		</div>
+	</div>
+  </body>
+  
+  <script>
+	function calcAttack() {
+		var attackMinSpan = document.getElementById('attackmin');
+		var attackMaxSpan = document.getElementById('attackmax');
+		var damage = parseFloat(document.getElementById('damage').value);
+		var level = parseFloat(document.getElementById('level').value);
+		var def = parseFloat(document.getElementById('defense').value);
+		var pwr = parseFloat(document.getElementById('power').value);
+		var gen = parseInt(document.getElementById('gen').value);
+
+		var stab = 1;
+		if (document.getElementById('stab').checked) { stab = 1.5; }
+		
+		var effRadio = document.getElementsByName('eff');
+		for(i=0; i<effRadio.length; i++) {
+			if (effRadio[i].checked) { var eff = (2.0) ** (i-2); }
+		}
+
+		var crit = 1.0;
+		if (document.getElementById('crit').checked) { 
+			if (gen == 6) { crit = 1.5; } else { crit = 2.0; } 
+		}
+		
+		var other = parseFloat(document.getElementById('other').value);
+		
+		var totalOther = stab * eff * crit * other;
+		var attackMin = (50 * def * ((damage / (totalOther * 1.0)) - 2)) / (pwr * ((0.4 * level) + 2));
+		var attackMax = (50 * def * ((damage / (totalOther * 0.85)) - 2)) / (pwr * ((0.4 * level) + 2));
+
+		attackMinSpan.innerHTML = Math.floor(attackMin);
+		attackMaxSpan.innerHTML = Math.ceil(attackMax);
+	}
+  </script>
+</html>
