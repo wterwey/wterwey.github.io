@@ -6,7 +6,6 @@
   <body>
 	<div class="container">
 		<h1>Attack Stat Calculator - Pokemon</h1>
-		<p>Enter the following information:</p>
 		<label for="gen">Generation:</label>
 		<select id="gen" name="gen" oninput="calcAttack()">
 			<option value="3">3</option>
@@ -78,8 +77,8 @@
 		var other = parseFloat(document.getElementById('other').value);
 		
 		var totalOther = stab * eff * crit * other;
-		var attackMin = (50 * def * ((damage / (totalOther * 1.0)) - 2)) / (pwr * ((0.4 * level) + 2));
-		var attackMax = (50 * def * ((damage / (totalOther * 0.85)) - 2)) / (pwr * ((0.4 * level) + 2));
+		var attackMin = (50 * def * (((damage - 0.5) / (totalOther * 1.0)) - 2)) / (pwr * ((0.4 * level) + 2));
+		var attackMax = (50 * def * (((damage + 0.5) / (totalOther * 0.85)) - 2)) / (pwr * ((0.4 * level) + 2));
 
 		attackMinSpan.innerHTML = Math.floor(attackMin);
 		attackMaxSpan.innerHTML = Math.ceil(attackMax);
