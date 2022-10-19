@@ -48,10 +48,17 @@
 				<h2>Attack stat: <span id="attackmin"></span>-<span id="attackmax"></span></h2>
 			</div>
 		</div>
+		<div style="text-align: center;">
+			<h6>version 2.0 - got the rounding more correct, should be better in handling Gens 3 and 4</h6>
+		</div>
 	</div>
   </body>
   
   <script>
+	function roundDown(num) {
+		return -Math.round(-num);
+	}
+
 	function calcAttack() {
 		var attackMinSpan = document.getElementById('attackmin');
 		var attackMaxSpan = document.getElementById('attackmax');
@@ -75,10 +82,33 @@
 		}
 		
 		var other = parseFloat(document.getElementById('other').value);
-		
-		var totalOther = stab * eff * crit * other;
-		var attackMin = (50 * def * (((damage - 0.5) / (totalOther * 1.0)) - 2)) / (pwr * ((0.4 * level) + 2));
-		var attackMax = (50 * def * (((damage + 0.5) / (totalOther * 0.85)) - 2)) / (pwr * ((0.4 * level) + 2));
+
+		var attackMin = 0;
+		var attackMax = 501;
+		for(att=5; att < 500; att++) {
+			if (gen == 3 || gen == 4) {
+				var firstCalc = Math.floor(2 * level / 5) + 2;
+				var secondCalc = Math.floor(firstCalc * pwr * att / def);
+				var thirdCalc = Math.floor(secondCalc / 50) + 2;
+				var minDmg = Math.floor(85 * stab * eff * crit * other * thirdCalc / 100);
+				var maxDmg = Math.floor(100 * stab * eff * crit * other * thirdCalc / 100);
+				if ((minDmg <= damage) && (damage <= maxDmg)) {
+					if (attackMin == 0) { attackMin = att; }
+					attackMax = att;
+				} 
+			}
+			if (gen == 5 || gen == 6) {
+				var firstCalc = ((((2 * level / 5) + 2) * pwr * att) / (def * 50)) + 2;
+				var secondCalc = (stab * eff * crit * other * firstCalc);
+				var minDmg = roundDown(0.85 * secondCalc);
+				var maxDmg = roundDown(1.00 * secondCalc);
+				if ((minDmg <= damage) && (damage <= maxDmg)) {
+					if (attackMin == 0) { attackMin = att; }
+					attackMax = att;
+				} 
+			}
+		}
+
 
 		attackMinSpan.innerHTML = Math.floor(attackMin);
 		attackMaxSpan.innerHTML = Math.ceil(attackMax);
