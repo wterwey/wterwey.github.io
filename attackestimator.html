@@ -49,6 +49,8 @@
 			</div>
 		</div>
 		<div style="text-align: center;">
+			<h6>version 2.1 - got the rounding correct in handling Gens 5 and 6</h6>
+
 			<h6>version 2.0 - got the rounding more correct, should be better in handling Gens 3 and 4</h6>
 		</div>
 	</div>
@@ -98,10 +100,12 @@
 				} 
 			}
 			if (gen == 5 || gen == 6) {
-				var firstCalc = ((((2 * level / 5) + 2) * pwr * att) / (def * 50)) + 2;
-				var secondCalc = (stab * eff * crit * other * firstCalc);
-				var minDmg = roundDown(0.85 * secondCalc);
-				var maxDmg = roundDown(1.00 * secondCalc);
+				var firstCalc = Math.floor((2 * level / 5) + 2);
+				var secondCalc = Math.floor(firstCalc * pwr * att / def);
+				var thirdCalc = Math.floor(secondCalc / 50.0) + 2;
+				var fourthCalc = (stab * eff * crit * other * thirdCalc);
+				var minDmg = roundDown(0.85 * fourthCalc);
+				var maxDmg = roundDown(1.00 * fourthCalc);
 				if ((minDmg <= damage) && (damage <= maxDmg)) {
 					if (attackMin == 0) { attackMin = att; }
 					attackMax = att;
