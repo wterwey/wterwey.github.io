@@ -1,0 +1,38 @@
+body {
+    background-color: #111111;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+	color: #eeeeee;
+}
+
+h1 {
+    text-align: center;
+	color: green;
+}
+
+h3 {
+	color: gold;
+}
+
+a:link {
+	color: blue;
+}
+
+a:visited {
+	color: #ccccff;
+}
+
+a:hover {
+	color: green;
+}
+
+th {
+	color:gold;
+}
+
+inprogress {
+	color:red;
+}
+
+complete {
+	color:cyan;
+}
